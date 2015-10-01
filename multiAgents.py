@@ -182,7 +182,41 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
           Returns the minimax action using self.depth and self.evaluationFunction
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        depth = self.depth
+        alpha = float('-inf')
+        beta = float('inf')
+        return self.alphaBetaPrun(gameState, depth, alpha, beta, 0, None)[1]
+
+    def alphaBetaPrun(self, gameState, depth, alpha, beta, index, bestAction):
+        if depth == 0 or gameState.isLose() or gameState.isWin():
+            return (self.evaluationFunction(gameState), bestAction)
+        elif index == 0:
+            # means the current agent is Pacman, do Max
+            maxVal = float('-inf')
+            actions = gameState.getLegalActions(0)
+            for action in actions:
+                val = self.alphaBetaPrun(gameState.generateSuccessor(0, action), depth, alpha, beta, 1, bestAction)[0]
+                if val > maxVal:
+                    if depth == self.depth:
+                        bestAction = action
+                    maxVal = val
+                if maxVal > beta:
+                    return (maxVal, bestAction)
+                alpha = max(alpha, maxVal)
+            return (maxVal, bestAction)
+        else:
+            nextIndex = (index + 1) % gameState.getNumAgents()
+            if nextIndex == 0:
+                # nextAgent is Pacman, we decrease the depth
+                depth -= 1
+            maxVal = float('inf')
+            actions = gameState.getLegalActions(index)
+            for action in actions:
+                maxVal = min(maxVal, self.alphaBetaPrun(gameState.generateSuccessor(index, action), depth, alpha, beta, nextIndex, bestAction)[0])
+                if maxVal < alpha:
+                    return (maxVal, bestAction)
+                beta = min(beta, maxVal)
+            return (maxVal, bestAction)
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """

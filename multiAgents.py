@@ -268,9 +268,11 @@ def betterEvaluationFunction(currentGameState):
       Your extreme ghost-hunting, pellet-nabbing, food-gobbling, unstoppable
       evaluation function (question 5).
 
-      DESCRIPTION: <I consider ghost's distace to pacman is important, the closer
+      DESCRIPTION: <I consider ghost's distance to pacman is important, the closer
       the ghost to pacman, the worse score it should return.
-      Also, if less left foods left, higher score. >
+      Also, if less left foods left, higher score.
+      For the states has same foods left and same minimum ghost distance, the closer
+      to the nearest food the higher score>
     """
     "*** YOUR CODE HERE ***"
     foodList = currentGameState.getFood().asList()
@@ -283,7 +285,7 @@ def betterEvaluationFunction(currentGameState):
     if len(currentGhoastStates) > 0:
         minGhostDist = min(manhattanDistance(ghost.getPosition(), currentPos) for ghost in currentGhoastStates)
     minDistToFood = min(0, (manhattanDistance(currentPos, food) for food in foodList))
-    return currentGameState.getScore() - minGhostDist + 100/(len(foodList) + minDistToFood + 1)
+    return currentGameState.getScore() - minGhostDist + 100/(len(foodList) + 1) + 10/(minDistToFood + 1);
 
 
 # Abbreviation

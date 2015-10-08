@@ -84,7 +84,6 @@ class ReflexAgent(Agent):
         ghostScore = 0
         if minGhostDist < 3 and closestGhost.scaredTimer <= 0:
             ghostScore = -100
-        # foodScore = minFoodDist + len(foodList), add 1 in case zero sum
         score = 1.0 / (minFoodDist + len(foodList) + 1) + ghostScore
         return score + successorGameState.getScore()
 
@@ -207,8 +206,6 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
             for action in actions:
                 val = self.alphaBetaPrun(gameState.generateSuccessor(0, action), depth, alpha, beta, 1)
                 if val > maxVal:
-                    if depth == self.depth:
-                        bestAction = action
                     maxVal = val
                 if maxVal > beta:
                     return maxVal
